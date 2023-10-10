@@ -1,0 +1,48 @@
+---
+title: "The Transportation Model"
+author: "Yash"
+date: "2023-10-10"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lets load required library:
+```{r}
+library(lpSolve)
+```
+
+# Set up cost matrix
+```{r}
+a <- matrix(c(22, 14, 30, 0, 16, 20, 24, 0), nrow = 2, byrow = TRUE) #Shipping Cost per unit
+b <- c(600, 625) #Production cost per unit
+cost.mat <- a+b #Combining Cost of shipping and production Cost per unit 
+colnames(cost.mat) <- c("W1","W2", "W3", "DW4" )
+rownames(cost.mat) <- c("Plant-A", "Plant-B")
+cost.mat
+
+```
+# Set up constraint sign and RHS
+```{r}
+row.signs <- rep("=", 2)
+row.rhs <- c(100, 120)
+col.signs <- rep("=", 4)
+col.rhs <- c(80, 60, 70, 10)
+
+lptrans <- lp.transport(cost.mat, "min", row.signs, row.rhs, col.signs, col.rhs)
+```
+
+# Printing objective value and solution
+```{r}
+colnames(lptrans$solution) <- c("W1","W2", "W3", "DW4" )
+rownames(lptrans$solution) <- c("Plant-A", "Plant-B")
+lptrans$solution
+
+lptrans$objval #objective value
+
+
+```
+
+
