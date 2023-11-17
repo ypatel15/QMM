@@ -1,0 +1,47 @@
+---
+title: "Integer Programming"
+author: "Yash"
+date: "2023-11-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Questions:
+## The manager wants to keep the total wage expenses as low as possible while ensuring that there are sufficient number of workers available each day. Formulate and solve the problem. What was the total cost? How many workers are available each day?
+
+```{r}
+# Load library
+library(lpSolveAPI)
+X <- read.lp("ip.lp")
+X
+```
+
+```{r}
+solve(X)
+get.variables(X)  
+get.constraints(X)
+
+```
+
+## Now we will answer all the question asked. What will be total minimized cost and How many workers will be availaible each day? 
+```{r}
+# Creating a table
+days <- c("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
+workers_available <- c(27, 24, 26, 25, 21, 19, 23)
+cost <- workers_available * c(750, 775, 800, 800, 800, 800, 775)
+workers_required <- c(27, 22, 26, 25, 21, 19, 18)
+table <- data.frame(DayOfWeek = days, NoOfWorkersRequired = workers_required,  NoOfWorkersAvailaible = workers_available, Cost = cost)
+
+# Adding a row for total cost
+total <- c("Total",sum(workers_required), sum(workers_available), sum(cost))
+table <- rbind(table, total)
+
+# table
+print(table)
+
+
+
+```
+## After solving the problem, the optimal solution provides the minimum total cost while satisfying the constraints. Based on the current data, the total cost of the optimal solution is $129,475. 
